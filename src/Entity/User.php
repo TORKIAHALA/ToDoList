@@ -139,4 +139,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function isValid()
+    {
+        $dateNow = new \DateTime('now');
+
+        $dateDif = $dateNow->diff($this->birthdate);
+
+        if ($dateDif->y >= 13) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -22,7 +22,7 @@ class TodoList
     #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Item::class)]
     private $items;
 
-    public function __construct()
+    public function __construct(User $user_todolist)
     {
         $this->items = new ArrayCollection();
     }
@@ -52,6 +52,18 @@ class TodoList
         return $this->items;
     }
 
+    /**
+     * @return Array
+     */
+    public function getItemsName()
+    {
+        $arrayName = array();
+        foreach ($this->getItems() as $item) {
+            $arrayName[] = $item->getName();
+        }
+        return $arrayName;
+    }
+
     public function addItem(Item $item): self
     {
         if (!$this->items->contains($item)) {
@@ -72,5 +84,10 @@ class TodoList
         }
 
         return $this;
+    }
+
+    public function isValid(): bool
+    {
+        return count($this->getItems()) < 10;
     }
 }

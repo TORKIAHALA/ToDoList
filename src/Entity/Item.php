@@ -25,6 +25,17 @@ class Item
     #[ORM\ManyToOne(targetEntity: TodoList::class, inversedBy: 'items')]
     private $todoList;
 
+    public function __construct(String $name, String $content, TodoList $todoList = null)
+    {
+        $this->date = new \DateTime();
+        $this->name = $name;
+        $this->content = $content;
+
+        if ($todoList != null) {
+            $this->todoList = $todoList;
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,5 +87,11 @@ class Item
         $this->todoList = $todoList;
 
         return $this;
+    }
+
+    public function isValid()
+    {
+        return strlen($this->content) <= 1000
+            && !in_array($this->name, $this->getTodoList()->getItemsName());
     }
 }

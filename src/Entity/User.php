@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -17,6 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email(message: "L'email n'est pas valide.")]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -33,6 +36,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime')]
     private $birthdate;
+
+    public function __construct($email, $lastname, $firstname, $password, $birthdate)
+    {
+        $this->email = $email;
+        $this->lastname = $lastname;
+        $this->firstname = $firstname;
+        $this->password = $password;
+        $this->birthdate = $birthdate;
+    }
 
     public function getId(): ?int
     {
@@ -140,16 +152,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
-        $dateNow = new \DateTime('now');
-
-        $dateDif = $dateNow->diff($this->birthdate);
-
-        if ($dateDif->y >= 13) {
-            return true;
-        } else {
-            return false;
-        }
+        return !empty($this->email)
+            && filter_var($this->email, FILTER_VALIDATE_EMAIL)
+            && !empty($this->firstname)
+            && !empty($this->lastname)
+            && !is_null($this->birthdate)
+            && $this->birthdate->addYears(13)->isBefore(Carbon::now())
+            && strlen($this->password) >= 8
+            && strlen($this->password) <= 40;
     }
 }

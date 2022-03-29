@@ -1,8 +1,10 @@
 <?php
 
 use App\Entity\User;
-use PHPUnit\Framework\TestCase;
 use Carbon\Carbon;
+use PHPUnit\Framework\TestCase;
+
+
 
 class UserTest extends TestCase
 {
@@ -10,13 +12,15 @@ class UserTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user = new User('seb@test.fr', 'seb', 'sso', Carbon::now()->subYears(20));
+        $this->user = new User('seb@test.fr', 'seb', 'sso', 'P@ssw0rd1234', Carbon::now()->subYears(20));
         parent::setUp();
     }
 
+
+
     public function testUserIsValidNominal()
     {
-        $u = new User('seb@test.fr', 'seb', 'sso', Carbon::now()->subYears(20));
+        $u = new User('seb@test.fr', 'seb', 'sso', 'P@ssw0rd1234', Carbon::now()->subYears(20));
         $result = $u->isValid();
         $this->assertTrue($result);
     }
@@ -28,7 +32,7 @@ class UserTest extends TestCase
 
     public function testUserNotValidDueToFName()
     {
-        $u = new User('seb@test.fr', '', 'sso', Carbon::now()->subYears(20));
+        $u = new User('seb@test.fr', '', 'sso', 'P@ssw0rd1234', Carbon::now()->subYears(20));
         $result = $u->isValid();
         $this->assertFalse($result);
     }
@@ -57,9 +61,10 @@ class UserTest extends TestCase
         $this->assertFalse($this->user->isValid());
     }
 
-    public function testNotValidBadEmail()
+    public function testNotValidBadPassword()
     {
-        $this->user->setEmail('toto');
+        $this->user->setPassword('toto');
+
         $this->assertFalse($this->user->isValid());
     }
 }

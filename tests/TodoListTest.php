@@ -18,9 +18,9 @@ class TodoListTest extends TestCase
         // $this->item = new Item();
         $this->todoList = new TodoList($this->user);
 
-        for ($i = 0; $i >= 10; $i++) {
-            $this->todoList->addItem(new Item("name " . $i, "content" . $i));
-        }
+
+        $this->todoList->addItem(new Item("name 2", "content"));
+
         parent::setUp();
     }
 
@@ -29,20 +29,25 @@ class TodoListTest extends TestCase
         $this->assertTrue($this->todoList->isValid());
     }
 
-    /* public function testMaxItem()
+    public function testMaxItem()
     {
         $this->user = new User('seb@test.fr', 'seb', 'sso', 'P@ssw0rd1234', Carbon::now()->subYears(20));
         // $this->item = new Item();
-        $this->todoList = new TodoList($this->user);
+        $todoList = new TodoList($this->user);
 
-        for ($i = 0; $i >= 25; $i++) {
-            $this->todoList->addItem(new Item("name " . $i, "content" . $i));
-        }
 
-        $this->assertFalse($this->todoList->isValid());
-    }*/
+        $todoList->addItem(new Item("name 1", "content 1"));
+        $todoList->addItem(new Item("name 2", "content 1"));
+        $todoList->addItem(new Item("name 3", "content 1"));
+        $todoList->addItem(new Item("name 4", "content 1"));
+        $todoList->addItem(new Item("name 5", "content 1"));
+        $todoList->addItem(new Item("name 6", "content 1"));
+        $todoList->addItem(new Item("name 7", "content 1"));
+        $todoList->addItem(new Item("name 8", "content 1"));
+        $todoList->addItem(new Item("name 9", "content 1"));
+        $todoList->addItem(new Item("name 10", "content 1"));
+        $todoList->addItem(new Item("name 11", "content 1"));
 
-    public function testNameItem()
-    {
+        $this->assertFalse($todoList->isValid());
     }
 }

@@ -91,7 +91,6 @@ class Item
 
     public function isValid()
     {
-        return strlen($this->content) <= 1000
-            && !in_array($this->name, $this->getTodoList()->getItemsName());
+        return strlen($this->content) <= 1000;
     }
 }

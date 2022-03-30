@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Services\EmailSenderService;
 use App\Repository\TodoListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,9 +23,22 @@ class TodoList
     #[ORM\OneToMany(mappedBy: 'todoList', targetEntity: Item::class)]
     private $items;
 
-    public function __construct(User $user_todolist)
+    public function __construct(User $user_todolist, EmailSenderService $emailSenderService = null)
     {
         $this->items = new ArrayCollection();
+
+        if (count($this->getItems()) == 8) {
+            $emailSenderService->send(
+                "TodoList : Attention !",
+                "admin@todolist.fr",
+                $user_todolist->getEmail(),
+                "email/email.html.twig",
+                [
+                    "name" => "TodoList",
+                    "description" => "Attention vous ne pouvez plus qu'ajouter 2 items !"
+                ]
+            );
+        }
     }
 
     public function getId(): ?int
@@ -88,6 +102,6 @@ class TodoList
 
     public function isValid(): bool
     {
-        return count($this->getItems()) < 10;
+        return count($this->getItems()) <= 10;
     }
 }
